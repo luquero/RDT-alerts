@@ -10,6 +10,11 @@ library(shiny)
     titlePanel("Cholera RDT Probable Outbreak Alert Algorithms"),
     sidebarLayout(
       sidebarPanel(
+        sliderInput("det.thresh.fp", label = "Maximum Proportion of False Positive Alerts",
+                    min = 0, max = 1, value = .8),
+        sliderInput("det.thresh", label = "Minimum Proportion of True Outbreaks Detected",
+                    min = 0, max = 1, value = .9),
+                    tags$hr(),
                    sliderInput("sens", label = "RDT sensitivity",
                                min = 0, max = 1, value = .9),
                    sliderInput("spec", label = "RDT specificity",
@@ -17,19 +22,22 @@ library(shiny)
                    sliderInput("prev", label = "Prevalence of cholera among CTC admissions ",
                                min = 0, max = 1, value = .5),
                    numericInput("numbertested",label="Number of tests performed",min=1,value=10),
-                   checkboxInput("kids", label = "Under-fives included in testing?",
-                              value = FALSE),
-                   sliderInput("det.thresh.fp", label = "Maximum Proportion of False Positive Alerts",
-                               min = 0, max = 1, value = .8),
-                   sliderInput("det.thresh", label = "Minimum Proportion of True Outbreaks Detected",
-                               min = 0, max = 1, value = .9),
+                   #checkboxInput("kids", label = "Under-fives included in testing?",
+                   #            value = FALSE),
                    img(src="dove.jpg", height = 50, width = 200),
-                   p("\n Contact Andrew Azman (azman@jhu.edu) for any issues or questions related to this.")
+                   p("\n Contact Andrew Azman (azman@jhu.edu) or Francisco Luquero (fluquero@jhu.edu) for any issues or questions related to this.")
       ),
       mainPanel(
+        tabsetPanel(
+        tabPanel("Main",
         p("Welcome. This small application allows us to explore the performance of different RDT-based diagnostic algorithms for",
           span("probable outbreaks.",style="font-style:italic")),
-        plotOutput("mainPlot")
-      )
+        plotOutput("mainPlot"),
+        renderText("test")
+        ),
+        tabPanel("Methods",
+                 p("Will add more details on methods etc. here")
+                 )
+      ))
     )
   ))
