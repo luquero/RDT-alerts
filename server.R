@@ -10,7 +10,7 @@ library(shiny)
 shinyServer(function(input, output) {
 
   output$mainPlot <- renderPlot({
-    
+    library(RColorBrewer)
     ## to make it easier we will just simulate rather than try to work out the probabilities themselves
     n.sims = 10000
     true.infs = matrix(sample(0:1,input$numbertested*n.sims,replace=T,prob=c((1-input$prev),input$prev)),
@@ -29,18 +29,20 @@ shinyServer(function(input, output) {
     ## probability of at least threash true case testing positive
     apply(test.res,2,function(x) sum(x))
     
-    prob.correct.detect = sapply(threshs,function(y) mean(apply(test.res,2,function(x) sum(x))>=y))
+    prob.correct.detect =  sapply(threshs,function(y) mean(apply(test.res,2,function(x) sum(x))>=y))
     prob.incorrect.detect = sapply(threshs,function(y) mean(apply(test.res.null,2,function(x) sum(x))>=y))
-    
-    
-    palette(brewer.pal(8,"Set2"))
-    par(mfrow=c(2,1),oma=c(3,1,3,1),mar=c(1,3,0,2),mgp=c(1.5,.4,0),tck=-.02)
-    plot(threshs,prob.correct.detect,type="p",lwd=2,col=2,xaxt="n",ylab="True Detection Prob.")
+
+    palette(brewer.pal(8,"Set1"))
+    par(mfrow=c(2,1),oma=c(3,1,3,1),mar=c(1.5,3,0,2),mgp=c(1.5,.4,0),tck=-.02)
+    plot(threshs,prob.correct.detect,type="p",lwd=2,col=2,xaxt="n",ylab="True Detection Prob.",xlab="")
     grid()
     axis(3,at=1:input$numbertested,labels=1:input$numbertested)
-    plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,ylab="False Detection Prob.")
+    abline(h=input$det.thresh,col=1)
+    plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,xaxt="n",ylab="False Detection Prob.")
+    axis(2,at=1:input$numbertested,labels=1:input$numbertested)
+    abline(h=input$det.thresh.fp,col=1)
     grid()
-    mtext("Threshold Number Testing Positive to Declare Probable Outbreak",side=1,outer=T,line=2)
+    mtext("Threshold Number Testing Positive to Declare Probable Outbreak",side=1,outer=T,line=0)
   })
 
 })
