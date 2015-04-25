@@ -41,8 +41,9 @@ shinyServer(function(input, output) {
     prob.correct.detect =  sapply(threshs,function(y) mean(apply(test.res,2,function(x) sum(x))>=y))
     prob.incorrect.detect = sapply(threshs,function(y) mean(apply(test.res.null,2,function(x) sum(x))>=y))
 
-    best.thresh = max(ceiling(approx(y = threshs,x=prob.incorrect.detect,xout=input$det.thresh.fp)$y),
-                      ceiling(approx(y = threshs,x=prob.correct.detect,xout=input$det.thresh)$y))
+    th.fp = ceiling(approx(y = threshs,x=prob.incorrect.detect,xout=input$det.thresh.fp)$y)
+    th.tp = floor(approx(y = threshs,x=prob.correct.detect,xout=input$det.thresh)$y)
+    best.thresh = th.fp ## I don't think this is always true come back to this
     
     palette(brewer.pal(8,"Set1"))
     par(mfrow=c(2,1),oma=c(3,1,3,1),mar=c(1.5,3,0,2),mgp=c(1.5,.4,0),tck=-.02)
@@ -52,7 +53,7 @@ shinyServer(function(input, output) {
     abline(h=input$det.thresh,col=AddAlpha(1,.5),lwd=2)
     abline(v=best.thresh,col=AddAlpha(1,.5),lwd=2)
     plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,xaxt="n",ylab="False Detection Prob.")
-    axis(2,at=1:input$numbertested,labels=1:input$numbertested)
+    axis(1,at=1:input$numbertested,labels=1:input$numbertested)
     abline(h=input$det.thresh.fp,col=AddAlpha(1,.5),lwd=2)
     abline(v=best.thresh,col=AddAlpha(1,.5),lwd=2)
     grid()
