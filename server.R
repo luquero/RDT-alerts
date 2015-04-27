@@ -52,7 +52,7 @@ shinyServer(function(input, output) {
     axis(3,at=1:input$numbertested,labels=1:input$numbertested)
     abline(h=(1-input$det.thresh),col=AddAlpha(1,.5),lwd=2)
     abline(v=best.thresh,col=AddAlpha(1,.5),lwd=2)
-    plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,xaxt="n",ylab="Risk of False \n Outbreak Detection")
+    plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,xaxt="n",ylab="Risk of False \n Outbreak Alert")
     axis(1,at=1:input$numbertested,labels=1:input$numbertested)
     abline(h=input$det.thresh.fp,col=AddAlpha(1,.5),lwd=2)
     abline(v=best.thresh,col=AddAlpha(1,.5),lwd=2)
