@@ -42,21 +42,21 @@ shinyServer(function(input, output) {
     prob.incorrect.detect = sapply(threshs,function(y) mean(apply(test.res.null,2,function(x) sum(x))>=y))
 
     th.fp = ceiling(approx(y = threshs,x=prob.incorrect.detect,xout=input$det.thresh.fp)$y)
-    th.tp = floor(approx(y = threshs,x=prob.correct.detect,xout=input$det.thresh)$y)
+    th.tp = floor(approx(y = threshs,x=prob.correct.detect,xout=(1-input$det.thresh))$y)
     best.thresh = th.fp ## I don't think this is always true come back to this
     
     palette(brewer.pal(8,"Set1"))
-    par(mfrow=c(2,1),oma=c(3,1,3,1),mar=c(1.5,3,0,2),mgp=c(1.5,.4,0),tck=-.02)
-    plot(threshs,prob.correct.detect,type="p",lwd=2,col=2,xaxt="n",ylab="True Detection Prob.",xlab="")
-    grid()
+    par(mfrow=c(2,1),oma=c(3,1,3,1),mar=c(1.5,4,0,0),mgp=c(1.5,.4,0),tck=-.02)
+    plot(threshs,prob.correct.detect,type="p",lwd=2,col=2,xaxt="n",ylab="Probability of \n Detecting an Outbreak",xlab="")
+    grid(lwd=2)
     axis(3,at=1:input$numbertested,labels=1:input$numbertested)
-    abline(h=input$det.thresh,col=AddAlpha(1,.5),lwd=2)
+    abline(h=(1-input$det.thresh),col=AddAlpha(1,.5),lwd=2)
     abline(v=best.thresh,col=AddAlpha(1,.5),lwd=2)
-    plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,xaxt="n",ylab="False Detection Prob.")
+    plot(threshs,prob.incorrect.detect,type="p",lwd=2,col=3,xaxt="n",ylab="Risk of False \n Outbreak Detection")
     axis(1,at=1:input$numbertested,labels=1:input$numbertested)
     abline(h=input$det.thresh.fp,col=AddAlpha(1,.5),lwd=2)
     abline(v=best.thresh,col=AddAlpha(1,.5),lwd=2)
-    grid()
+    grid(lwd=2)
     mtext("Threshold Number Testing Positive to Declare Probable Outbreak",side=1,outer=T,line=0)
   })
 
